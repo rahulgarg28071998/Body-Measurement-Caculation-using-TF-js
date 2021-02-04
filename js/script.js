@@ -10,11 +10,13 @@
     var photo = null;
     var startbutton = null;
 
-    function startup() {
+    async function startup() {
         video = document.getElementById('video');
         canvas = document.getElementById('canvas');
         photo = document.getElementById('photo');
         startbutton = document.getElementById('startbutton');
+
+
 
         navigator.mediaDevices.getUserMedia({
                 video: true,
@@ -63,6 +65,8 @@
     }
 
     async function takepicture() {
+
+        var inputHeight = 178;
         var context = canvas.getContext('2d');
         if (width && height) {
             canvas.width = width;
@@ -71,24 +75,89 @@
 
             var data = canvas.toDataURL('image/png');
             photo.setAttribute('src', data);
-            console.log(photo);
+            // console.log(photo);
             const img = document.getElementById('photo');
             const net = await bodyPix.load();
 
             const partSegmentation = await net.segmentPersonParts(img);
+            try {
+                // console.log(partSegmentation.allPoses[0].keypoints);
+                var poseCoordinates = partSegmentation.allPoses[0].keypoints;
+                //0.93
+                var leftShoulder = poseCoordinates[5]["position"];
+                var rightShoulder = poseCoordinates[6]["position"];
+                var leftElbow = poseCoordinates[7]["position"];
+                var rightElbow = poseCoordinates[8]["position"];
+                var leftWrist = poseCoordinates[9]["position"];
+                var rightWrist = poseCoordinates[10]["position"];
+                var leftHip = poseCoordinates[11]["position"];
+                var rightHip = poseCoordinates[12]["position"];
+                var leftKnee = poseCoordinates[13]["position"];
+                var rightKnee = poseCoordinates[14]["position"];
+                var leftAnkle = poseCoordinates[15]["position"];
+                var rightAnkle = poseCoordinates[16]["position"];
+                // console.log(leftShoulder);
+
+                var heightPixel = Math.max((leftAnkle.y - leftShoulder.y), (rightAnkle.y - rightShoulder.y))
+                console.log("height " + heightPixel);
+
+                heightPixel = 1.28 * heightPixel;
+                var multiplier = inputHeight / heightPixel;
+                var shoulder = distance(leftShoulder, rightShoulder);
+                console.log("shoulder length " + multiplier * shoulder);
+
+                var weist = distance(leftHip, rightHip);
+                console.log("weist length " + multiplier * weist);
+
+                var leftArm = distance(leftShoulder, leftElbow) + distance(leftElbow, leftWrist);
+                console.log("left arm " + multiplier * leftArm);
+
+                var rightArm = distance(rightShoulder, rightElbow) + distance(rightElbow, rightWrist);
+                console.log("right arm " + multiplier * rightArm);
+
+                var leftLeg = distance(leftHip, leftKnee) + distance(leftKnee, leftAnkle);
+                console.log("left leg " + multiplier * leftLeg);
+
+                var rightLeg = distance(rightHip, rightKnee) + distance(rightKnee, rightAnkle);
+                console.log("right leg " + multiplier * rightLeg);
+            } catch {
+                console.log("datapoints not gathered");
+            }
+
             const coloredPartImage = bodyPix.toColoredPartMask(partSegmentation);
-            const opacity = 0.7;
+            const opacity = 0.9;
             const flipHorizontal = false;
             const maskBlurAmount = 0;
-            const pixelCellWidth = 10.0;
+            const pixelCellWidth = 5.0;
             const canvas1 = document.getElementById('myCanvas');
             bodyPix.drawPixelatedMask(
                 canvas1, img, coloredPartImage, opacity, maskBlurAmount,
                 flipHorizontal, pixelCellWidth);
+            // console.log(coloredPartImage)
+
+
+
+            const segmentation = await net.segmentPerson(img);
+
+            const backgroundBlurAmount = 10;
+            const edgeBlurAmount = 3;
+
+
+            const myCanvas2 = document.getElementById('myCanvas2');
+
+            bodyPix.drawBokehEffect(
+                myCanvas2, img, segmentation, backgroundBlurAmount,
+                edgeBlurAmount, flipHorizontal);
+
 
         } else {
             clearphoto();
         }
+    }
+
+
+    function distance(point1, point2) {
+        return Math.pow((Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2)), 0.5);
     }
     // body segmentaion code
     // const img = document.getElementById('photo');

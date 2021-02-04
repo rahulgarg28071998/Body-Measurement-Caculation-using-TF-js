@@ -5,27 +5,52 @@
         /* CSS comes here */
     </style>
     <title>My Favorite Sport</title>
-    <script src="js/script.js"></script>
+
     <link rel="stylesheet" href="/css/style.css">
+    <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.2"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/body-pix@2.0"></script>
+    <script src='js/html2canvas.min.js'></script>
+    <script type="text/javascript" src="https://unpkg.com/webcam-easy/dist/webcam-easy.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src='js/webcam-ui-lib.js'></script>
+    <script src="js/script.js" defer></script>
+    <script src="js/script2.js" defer></script>
 </head>
 
 <body>
+    <!-- <form>
+        <div class="form-group">
+            <label for="exampleInputEmail1">Email address</label>
+            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form> -->
+
+
     <div class="contentarea">
         <h1>
             Using body fit to segment body
         </h1>
         <div class="camera">
-            <video id="video">Video stream not available.</video>
+            <video id="video" autoplay playsinline width="640" height="480">Video stream not available.</video>
             <img class="bodyfit" src="images/body.png" alt="body fit on images" />
         </div>
         <div><button id="startbutton">Take photo</button></div>
         <canvas id="canvas"></canvas>
         <div class="output">
-            <img id="photo" alt="The screen capture will appear in this box.">
+            <img style="vertical-align: baseline;" class="output" id="photo" alt="The screen capture will appear in this box.">
         </div>
-        <canvas id="myCanvas" width="200" height="100" style="border:1px solid #000000;">
+        <canvas class="output" id="myCanvas">
+            Your browser does not support the HTML canvas tag.
+        </canvas>
+        <canvas class="output" id="myCanvas2">
+            Your browser does not support the HTML canvas tag.
+        </canvas>
+        <canvas class="output" id="myCanvas3">
+            Your browser does not support the HTML canvas tag.
+        </canvas>
+        <canvas class="output" id="myCanvas4">
             Your browser does not support the HTML canvas tag.
         </canvas>
     </div>
