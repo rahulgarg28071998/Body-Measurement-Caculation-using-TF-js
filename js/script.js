@@ -76,14 +76,15 @@
             var data = canvas.toDataURL('image/png');
             photo.setAttribute('src', data);
             // console.log(photo);
-            const img = document.getElementById('photo');
+            let img = document.getElementById('photo');
             const net = await bodyPix.load();
-
             const partSegmentation = await net.segmentPersonParts(img);
             try {
                 // console.log(partSegmentation.allPoses[0].keypoints);
                 var poseCoordinates = partSegmentation.allPoses[0].keypoints;
                 //0.93
+                var leftEye = poseCoordinates[3]["position"];
+                var rightEye = poseCoordinates[2]["position"];
                 var leftShoulder = poseCoordinates[5]["position"];
                 var rightShoulder = poseCoordinates[6]["position"];
                 var leftElbow = poseCoordinates[7]["position"];
@@ -96,9 +97,11 @@
                 var rightKnee = poseCoordinates[14]["position"];
                 var leftAnkle = poseCoordinates[15]["position"];
                 var rightAnkle = poseCoordinates[16]["position"];
-                // console.log(leftShoulder);
-
+                console.log(poseCoordinates);
+                console.log(leftAnkle,rightAnkle)
                 var heightPixel = Math.max((leftAnkle.y - leftShoulder.y), (rightAnkle.y - rightShoulder.y))
+                
+                // var heightPixel = Math.max(distance(leftAnkle.y, leftEye.y), distance(rightAnkle.y, rightEye.y))
                 console.log("height " + heightPixel);
 
                 heightPixel = 1.28 * heightPixel;
@@ -128,12 +131,12 @@
             const opacity = 0.9;
             const flipHorizontal = false;
             const maskBlurAmount = 0;
-            const pixelCellWidth = 5.0;
+            const pixelCellWidth = 10.0;
             const canvas1 = document.getElementById('myCanvas');
             bodyPix.drawPixelatedMask(
                 canvas1, img, coloredPartImage, opacity, maskBlurAmount,
                 flipHorizontal, pixelCellWidth);
-            // console.log(coloredPartImage)
+            console.log(coloredPartImage)
 
 
 
@@ -166,3 +169,17 @@
     // console.log(segmentation);
     window.addEventListener('load', startup, false);
 })();
+
+function submitHeight() {
+    let ele = document.getElementById('exampleInputEmail1').value
+    document.getElementById('displayHeight').innerHTML  = ele + ' cms is the provided height'
+}
+
+// function getCoordinates(poses, bodyPart, confidence=0.9) {
+//     let part = poses.map((p) => {
+//         if(p.part==bodyPart)
+//             return p
+//     })
+//     console.log(part)
+//     return part
+// }

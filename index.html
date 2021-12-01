@@ -4,9 +4,9 @@
     <style>
         /* CSS comes here */
     </style>
-    <title>My Favorite Sport</title>
+    <title>Body Measure</title>
 
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="./css/style.css">
     <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.2"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/body-pix@2.0"></script>
@@ -15,23 +15,25 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src='js/webcam-ui-lib.js'></script>
     <script src="js/script.js" defer></script>
-    <script src="js/script2.js" defer></script>
+    <!-- <script src="js/script2.js" defer></script> -->
 </head>
 
 <body>
-    <!-- <form>
-        <div class="form-group">
-            <label for="exampleInputEmail1">Email address</label>
-            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form> -->
 
 
     <div class="contentarea">
         <h1>
             Using body fit to segment body
         </h1>
+        <form class="container p-5">
+            <div class="form-group">
+                <label for="exampleInputEmail1">Enter Your Height in cms</label>
+                <input type="number" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Height">
+            </div>
+            <button type="button" class="btn btn-primary" onclick="submitHeight()">Submit</button>
+            <div id="displayHeight" class="m-2"></div>
+        </form>
+    
         <div class="camera">
             <video id="video" autoplay playsinline width="640" height="480">Video stream not available.</video>
             <img class="bodyfit" src="images/body.png" alt="body fit on images" />
